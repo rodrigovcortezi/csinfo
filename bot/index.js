@@ -6,10 +6,10 @@ const config = require('./config')
 const timeZone = 'America/Sao_Paulo'
 
 const client = new TwitterApi({
-  appKey: 'MHodl548faUtuVUAMou7LEor9',
-  appSecret: 'vPsl0sj7Etz6x79RXPflk0y1ubZdEaF0vOcypj6jfzh5HPFACn',
-  accessToken: '1516426533501640719-CI0y3PPBefJs0VzhKToDNgV9OtQA6s',
-  accessSecret: 'eWffU2AQNjI8wcblBVXpBr7GZlMpEVqGWrWUnMBnUODmh',
+  appKey: process.env.APP_KEY,
+  appSecret: process.env.APP_SECRET,
+  accessToken: process.env.ACCESS_TOKEN,
+  accessSecret: process.env.ACCESS_SECRET,
 })
 
 const formatPost = (matches) => {
