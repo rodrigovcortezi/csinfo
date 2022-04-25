@@ -1,0 +1,41 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Team {
+  id              Int     @id @default(autoincrement())
+  hltvId          Int     @unique
+  hltvSlug        String
+  name            String
+  logoUrl         String?
+  matchesAsTeam1  Match[] @relation(name: "team1")
+  matchesAsTeam2  Match[] @relation(name: "team2")
+}
+
+model Match {
+  id        Int      @id @default(autoincrement())
+  hltvId    Int      @unique
+  hltvSlug  String
+  event     Event?    @relation(fields: [eventId], references: [id])
+  eventId   Int?
+  team1     Team?     @relation(name: "team1", fields: [team1Id], references: [id])
+  team1Id   Int?
+  team2     Team?     @relation(name: "team2", fields: [team2Id], references: [id])
+  team2Id   Int?
+  date      DateTime
+  meta      String
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  hltvId    Int      @unique
+  hltvSlug  String
+  name      String
+  matches   Match[]
+  logoUrl   String?
+}

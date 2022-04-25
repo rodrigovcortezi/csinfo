@@ -1,0 +1,11 @@
+{
+  "name": "hltv",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "bull": "^4.8.1",
+    "cheerio": "^1.0.0-rc.10",
+    "node-fetch": "2"
+  }
+}

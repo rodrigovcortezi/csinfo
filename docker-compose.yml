@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: ./api
+    ports:
+      - 3000:3000
+    volumes:
+      - ./api:/app
+      - db-data:/app/prisma/data
+      - /app/node_modules
+  redis:
+    image: 'redis:alpine'
+  retriever:
+    depends_on:
+      - api
+      - redis
+    build:
+      context: ./retriever
+    volumes:
+      - ./retriever:/app
+      - /app/node_modules
+  bot:
+    depends_on:
+      - api
+    build:
+      context: ./bot
+    volumes:
+      - ./bot:/app
+      - /app/node_modules
+    environment:
+      - APP_KEY
+      - APP_SECRET
+      - ACCESS_TOKEN
+      - ACCESS_SECRET
+volumes:
+  db-data:
+    driver: local
