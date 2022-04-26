@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   api:
+    image: ghcr.io/rodrigovcortezi/csinfo-api
     build:
       context: ./api
     ports:
@@ -15,6 +16,7 @@ services:
     depends_on:
       - api
       - redis
+    image: ghcr.io/rodrigovcortezi/csinfo-retriever
     build:
       context: ./retriever
     volumes:
@@ -23,6 +25,7 @@ services:
   bot:
     depends_on:
       - api
+    image: ghcr.io/rodrigovcortezi/csinfo-bot
     build:
       context: ./bot
     volumes:
