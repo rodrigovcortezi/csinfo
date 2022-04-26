@@ -26,8 +26,17 @@ jobs:
     steps:
       - name: Pull image and restart
         uses: appleboy/ssh-action@master
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USER: ${{ github.actor }}
         with:
           host: ${{ secrets.HOSTNAME }}
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: whoami
+          envs: TOKEN,USER
+          script: |
+            cd /home/ec2-user/csinfo
+            echo $TOKEN | docker login ghcr.io -u ${USER} --password-stdin
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
