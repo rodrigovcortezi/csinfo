@@ -30,8 +30,8 @@ jobs:
           HOSTNAME: ${{ secrets.HOSTNAME }}
           USER_NAME: ${{ secrets.USER_NAME}}
         run: |
-          echo $PRIVATE_KEY > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          echo $PRIVATE_KEY > key.pem && chmod 400 key.pem
+          ssh -o StrictHostKeyChecking=no -i key.pem ${USER_NAME}@${HOSTNAME} '
             cd /home/ec2-user/csinfo
             echo "${{ secrets.GITHUB_TOKEN }}" > jorge
           '
