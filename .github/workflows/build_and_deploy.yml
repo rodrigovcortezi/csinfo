@@ -36,7 +36,10 @@ jobs:
           envs: TOKEN,USER
           script: |
             cd /home/ec2-user/csinfo
-            echo $TOKEN | docker login ghcr.io -u ${USER} --password-stdin
+            git fetch --all
+            git reset --hard origin/main
+            git pull origin main
             docker-compose down
+            echo $TOKEN | docker login ghcr.io -u ${USER} --password-stdin
             docker-compose pull
             docker-compose up -d
