@@ -1,5 +1,6 @@
 const PrismaClient = require('@prisma/client').PrismaClient
 const moment = require('moment-timezone')
+moment.tz.setDefault('America/Sao_Paulo')
 
 const updateQuery = (match) => {
   const { team1: t1, team2: t2, date, meta } = match
@@ -111,15 +112,16 @@ const findAll = async () => {
   return matches
 }
 
-const findAllToday = async (filter = null) => {
+const findAllToday = async (filter) => {
   const prisma = new PrismaClient()
-  const timeZone = 'America/Sao_Paulo'
+  const date = moment({ hour: 5 })
+  const endOfDay = date.isAfter(moment()) ? date : date.add(1, 'day')
   const matches = await prisma.match.findMany({
     where: {
       ...filter,
       date: {
-        gte: moment().tz(timeZone).subtract(1, 'hour').toDate(),
-        lte: moment().tz(timeZone).endOf('day').toDate(),
+        gte: moment().subtract(1, 'hour').toDate(),
+        lt: endOfDay.toDate(),
       },
       team1: {
         isNot: null,
