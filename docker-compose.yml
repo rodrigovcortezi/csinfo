@@ -25,6 +25,7 @@ services:
   bot:
     depends_on:
       - api
+      - redis
     image: ghcr.io/rodrigovcortezi/csinfo-bot
     build:
       context: ./bot
@@ -36,6 +37,7 @@ services:
       - APP_SECRET
       - ACCESS_TOKEN
       - ACCESS_SECRET
+    command: node index.js
 volumes:
   db-data:
     driver: local
