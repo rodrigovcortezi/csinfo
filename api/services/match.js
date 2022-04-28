@@ -112,6 +112,21 @@ const findAll = async () => {
   return matches
 }
 
+const find = async (id) => {
+  const prisma = new PrismaClient()
+  const match = await prisma.match.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      team1: true,
+      team2: true,
+      event: true,
+    },
+  })
+  return match
+}
+
 const findAllToday = async (filter) => {
   const prisma = new PrismaClient()
   const date = moment({ hour: 5 })
@@ -144,5 +159,6 @@ const findAllToday = async (filter) => {
 module.exports = {
   createOrUpdate,
   findAll,
+  find,
   findAllToday,
 }
