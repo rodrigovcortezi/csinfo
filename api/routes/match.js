@@ -8,12 +8,6 @@ router.get('/match', async (ctx) => {
   ctx.body = matches
 })
 
-router.get('/match/:id', async (ctx) => {
-  const id = parseInt(ctx.params.id, 10)
-  const match = await services.find(id)
-  ctx.body = match
-})
-
 router.get('/match/today', async (ctx) => {
   const { teams } = ctx.query
   if (teams) {
@@ -30,6 +24,12 @@ router.get('/match/today', async (ctx) => {
     const matches = await services.findAllToday()
     ctx.body = matches
   }
+})
+
+router.get('/match/:id', async (ctx) => {
+  const id = parseInt(ctx.params.id, 10)
+  const match = await services.find(id)
+  ctx.body = match
 })
 
 router.post('/match', async (ctx) => {
