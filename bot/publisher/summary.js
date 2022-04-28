@@ -54,11 +54,11 @@ const compareMatches = (match1, match2) => {
 const compare = (list1, list2) => {
   if (list1.length != list2.length) return false
   const zip = (a, b) => a.map((k, i) => [k, b[i]])
-  zip(list1, list2).forEach(([m1, m2]) => {
+  for ([m1, m2] of zip(list1, list2)) {
     if (!compareMatches(m1, m2)) {
       return false
     }
-  })
+  }
 
   return true
 }
