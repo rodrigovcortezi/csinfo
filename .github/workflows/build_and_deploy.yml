@@ -39,8 +39,8 @@ jobs:
             git fetch --all
             git reset --hard origin/main
             git pull origin main
-            docker-compose down
+            docker-compose stop
+            docker system prune -f
             echo $TOKEN | docker login ghcr.io -u ${USER} --password-stdin
             docker-compose pull
             docker-compose up -d
-            docker system prune -f
