@@ -7,11 +7,14 @@ const init = () => {
   const redis = { host: 'redis' }
   const queue = new Bull('match-queue', { redis })
 
-  queue.on('failed', (job, err) => {
-    console.log(err.toString())
+  queue.on('failed', (_, err) => {
+    console.error('ERROR: job failed')
+    console.error(err.toString())
   })
+
   queue.on('error', (error) => {
-    console.log(error.toString())
+    console.error('ERROR: job error')
+    console.error(error.toString())
   })
 
   queue.process(async () => {
@@ -21,7 +24,11 @@ const init = () => {
   })
 
   const { cron, timeZone: tz } = config
-  queue.add(null, { repeat: { cron, tz } })
+  queue.add(null, {
+    repeat: { cron, tz },
+    removeOnComplete: 10,
+    removeOnFailed: 10,
+  })
 }
 
 init()

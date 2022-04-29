@@ -12,6 +12,8 @@ services:
       - /app/node_modules
   redis:
     image: 'redis:alpine'
+    volumes:
+      - redis-data:/data
   retriever:
     depends_on:
       - api
@@ -40,4 +42,6 @@ services:
     command: node index.js
 volumes:
   db-data:
+    driver: local
+  redis-data:
     driver: local
