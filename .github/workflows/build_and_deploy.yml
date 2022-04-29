@@ -31,24 +31,24 @@ jobs:
           context: ./api
           push: true
           tags: ghcr.io/rodrigovcortezi/csinfo-api
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=local,src=/tmp/.buildx-cache/api
+          cache-to: type=local,dest=/tmp/.buildx-cache-new/api
       - name: Build and push image (retriever)
         uses: docker/build-push-action@v2
         with:
           context: ./retriever
           push: true
           tags: ghcr.io/rodrigovcortezi/csinfo-retriever
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=local,src=/tmp/.buildx-cache/retriever
+          cache-to: type=local,dest=/tmp/.buildx-cache-new/retriever
       - name: Build and push image (bot)
         uses: docker/build-push-action@v2
         with:
           context: ./bot
           push: true
           tags: ghcr.io/rodrigovcortezi/csinfo-bot
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=local,src=/tmp/.buildx-cache/bot
+          cache-to: type=local,dest=/tmp/.buildx-cache-new/bot
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
