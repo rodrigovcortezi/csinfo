@@ -1,9 +1,9 @@
 const Bull = require('bull')
 const fetch = require('node-fetch')
 const config = require('./config')
-const { summaryPublisher } = require('./publisher')
+const TwitterPublisher = require('./publisher')
 
-const init = () => {
+const setupBot = () => {
   const redis = { host: 'redis' }
   const queue = new Bull('match-queue', { redis })
 
@@ -17,18 +17,33 @@ const init = () => {
     console.error(error.toString())
   })
 
+  const publishers = []
+
   queue.process(async () => {
     const response = await fetch('http://api:3000/match/today')
     const matches = await response.json()
-    summaryPublisher(matches)
+    publishers.forEach((publisherCallback) => {
+      publisherCallback(matches)
+    })
   })
 
-  const { cron, timeZone: tz } = config
-  queue.add(null, {
-    repeat: { cron, tz },
-    removeOnComplete: 10,
-    removeOnFailed: 10,
-  })
+  return {
+    init() {
+      const { cron, timeZone: tz } = config
+      queue.add(null, {
+        repeat: { cron, tz },
+        removeOnComplete: 10,
+        removeOnFailed: 10,
+      })
+    },
+    add(callback) {
+      publishers.push(callback)
+    },
+  }
 }
 
-init()
+const bot = setupBot()
+Object.values(TwitterPublisher).forEach((callback) => {
+  bot.add(callback)
+})
+bot.init()
