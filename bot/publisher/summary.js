@@ -75,8 +75,10 @@ const summaryPublisher = async (allMatches) => {
     return
   }
   const firstMatch = matches[0]
-  const timeToFirstMatch = moment(firstMatch.date).diff(moment(), 'hours')
-  if (timeToFirstMatch > 2) {
+  const timeToFirstMatch = moment(firstMatch.date).diff(moment(), 'minutes')
+  // Maximum time (in minutes) to first match
+  const maxTimeToMatch = 150
+  if (timeToFirstMatch > maxTimeToMatch) {
     console.log(
       'first match found not happening whithin next 2 hours... skipping post!'
     )
