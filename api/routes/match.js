@@ -39,6 +39,7 @@ router.get('/match/:id', async (ctx) => {
 router.post('/match', async (ctx) => {
   const matchesData = ctx.request.body
   const matches = await services.createOrUpdate(matchesData)
+  await services.notifyUpdate()
   ctx.response.status = 200
   ctx.body = { count: matches.length, status: 'created' }
 })

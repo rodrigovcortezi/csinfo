@@ -7,4 +7,3 @@ RUN yarn install
 RUN chown -R node:staff ./node_modules
 COPY . .
 EXPOSE 3000
-ENTRYPOINT ["./init.sh"]

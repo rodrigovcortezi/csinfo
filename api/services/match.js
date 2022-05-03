@@ -1,4 +1,5 @@
 const PrismaClient = require('@prisma/client').PrismaClient
+const Bull = require('bull')
 const moment = require('moment-timezone')
 moment.tz.setDefault('America/Sao_Paulo')
 
@@ -106,6 +107,12 @@ const createOrUpdate = async (matchesData) => {
   return result
 }
 
+const notifyUpdate = () => {
+  const redis = { host: 'redis' }
+  const queue = new Bull('matches-updated', { redis })
+  return queue.add(null, { lifo: true })
+}
+
 const findAll = async () => {
   const prisma = new PrismaClient()
   const matches = await prisma.match.findMany()
@@ -158,6 +165,7 @@ const findAllToday = async (filters) => {
 
 module.exports = {
   createOrUpdate,
+  notifyUpdate,
   findAll,
   find,
   findAllToday,

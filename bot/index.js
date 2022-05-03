@@ -1,11 +1,10 @@
 const Bull = require('bull')
 const fetch = require('node-fetch')
-const config = require('./config')
 const TwitterPublisher = require('./publisher')
 
 const setupBot = () => {
   const redis = { host: 'redis' }
-  const queue = new Bull('match-queue', { redis })
+  const queue = new Bull('matches-updated', { redis })
 
   queue.on('failed', (_, err) => {
     console.error('ERROR: job failed')
@@ -17,23 +16,27 @@ const setupBot = () => {
     console.error(error.toString())
   })
 
-  const publishers = []
-
-  queue.process(async () => {
-    const response = await fetch('http://api:3000/match/today')
-    const matches = await response.json()
-    publishers.forEach((publisherCallback) => {
-      publisherCallback(matches)
-    })
+  queue.on('completed', () => {
+    // Empty queue after processing.
+    // This prevents processing stale updates.
+    queue.empty()
   })
+
+  const publishers = []
 
   return {
     init() {
-      const { cron, timeZone: tz } = config
-      queue.add(null, {
-        repeat: { cron, tz },
-        removeOnComplete: 10,
-        removeOnFailed: 10,
+      console.log('bot started...')
+      queue.process(async () => {
+        const response = await fetch('http://api:3000/match/today')
+        const matches = await response.json()
+        const promises = []
+        publishers.forEach((callback) => {
+          const p = callback(matches)
+          promises.push(p)
+        })
+
+        await Promise.all(promises)
       })
     },
     add(callback) {
