@@ -33,8 +33,8 @@ const clearQueue = async () => {
 const main = async () => {
   console.log('retriever started...')
   await clearQueue()
-  // enqueue job every 20 minutes
-  const interval = 20 * 60 * 1000
+  // enqueue job every 5 minutes
+  const interval = 5 * 60 * 1000
   const job = await queue.add(null, {
     repeat: { every: interval },
   })
