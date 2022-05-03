@@ -127,13 +127,13 @@ const find = async (id) => {
   return match
 }
 
-const findAllToday = async (filter) => {
+const findAllToday = async (filters) => {
   const prisma = new PrismaClient()
   const date = moment({ hour: 5 })
   const endOfDay = date.isAfter(moment()) ? date : date.add(1, 'day')
   const matches = await prisma.match.findMany({
     where: {
-      ...filter,
+      ...filters,
       date: {
         gte: moment().subtract(1, 'hour').toDate(),
         lt: endOfDay.toDate(),
