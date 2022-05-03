@@ -142,7 +142,7 @@ const findAllToday = async (filters) => {
     where: {
       ...filters,
       date: {
-        gte: moment().subtract(1, 'hour').toDate(),
+        gte: moment().toDate(),
         lt: endOfDay.toDate(),
       },
       team1: {
