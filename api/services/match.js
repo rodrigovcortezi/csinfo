@@ -1,5 +1,6 @@
-const PrismaClient = require('@prisma/client').PrismaClient
 const Bull = require('bull')
+const PrismaClient = require('@prisma/client').PrismaClient
+const prisma = new PrismaClient()
 const moment = require('moment-timezone')
 moment.tz.setDefault('America/Sao_Paulo')
 
@@ -91,7 +92,6 @@ const createQuery = (match) => {
 }
 
 const createOrUpdate = async (matchesData) => {
-  const prisma = new PrismaClient()
   const result = []
   for (const match of matchesData) {
     const saved = await prisma.match.upsert({
@@ -114,13 +114,11 @@ const notifyUpdate = () => {
 }
 
 const findAll = async () => {
-  const prisma = new PrismaClient()
   const matches = await prisma.match.findMany()
   return matches
 }
 
 const find = async (id) => {
-  const prisma = new PrismaClient()
   const match = await prisma.match.findUnique({
     where: {
       id,
@@ -135,7 +133,6 @@ const find = async (id) => {
 }
 
 const findAllToday = async (filters) => {
-  const prisma = new PrismaClient()
   const date = moment({ hour: 5 })
   const endOfDay = date.isAfter(moment()) ? date : date.add(1, 'day')
   const matches = await prisma.match.findMany({
